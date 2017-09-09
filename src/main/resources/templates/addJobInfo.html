@@ -12,11 +12,11 @@
     <div class="container text-center">
         <div class="container">
 
-                <form class="well form-horizontal" th:action="@{/addJobInfo}" th:object="${job}" method="post">
+                <form class="well form-horizontal" th:action="@{/addJobInfo}" th:object="${aSkill}" method="post">
                 <fieldset>
                     <!-- Form Name -->
                     <legend align="Center">Please Enter Your Job Information</legend>
-                    <!--<input type="hidden" th:field="*{newJob.id}" />-->
+                    <input type="hidden" th:field="*{resume.id}" />
                     <input type="hidden" th:field="*{id}" />
                     <!-- Text input-->
                     <!--<label th:inline="text">Adding Skills for [[${newJob.jobskill.skill}]]</label>-->
@@ -46,6 +46,24 @@
                             <div  th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}" class="well alert alert-danger" role="alert"></div>
                             <input  th:field="*{salary}" name="salary" placeholder="Enter Salary" class="form-control" type="text">
                         </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-condensed">
+                            <caption>
+                                <h3><b>Desired Skills</b></h3>
+                            </caption>
+
+                            <tbody>
+                            <th:block th:each="item:${skills}">
+                                <tr>
+                                    <!-- checked skill ids will be available as request params in controller post route -->
+                                    <td><input type="checkbox" name="checkedIds" th:value="${item.id}"/></td>
+                                    <td th:text="${item.skill}"></td>
+                                </tr>
+                            </th:block>
+                            </tbody>
+
+                        </table>
                     </div>
                     <!-- Button -->
                     <div class="form-group">

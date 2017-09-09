@@ -284,12 +284,9 @@ public class MainController {
 
 
     @GetMapping("/addJobInfo")
-    public String showJobPage(Model model)
-    {
-        // this is to check that principal is returning the loggedin user
-
-
-        model.addAttribute("job",new Job());
+    public String showJobPage(Model model)  {
+        model.addAttribute("newJob",new Job());
+        model.addAttribute("skills", skillsRepostory.findAll());
         return "addJobInfo";
     }
     @PostMapping("/addJobInfo")
@@ -299,45 +296,88 @@ public class MainController {
 
         return "redirect:/addSkillToJobInfo/"+  job.getId();
     }
-    @GetMapping("/addSkillToJobInfo/{id}")
-    public String addSkilltoJob(@PathVariable("id") long job_Id,Model model) {
-        model.addAttribute("job", jobRepository.findOne(new Long(job_Id)));
-        model.addAttribute("skillLists", skillsRepostory.findAll());
-        return "addSkillToJobInfo";
+    @RequestMapping(value="/addjob",method= RequestMethod.GET)
+    public String showJobForm(Model model)
+    {
+        model.addAttribute("job",new Job());
+        return "addjob";
+    }
+    @RequestMapping(value="/addjob", method = RequestMethod.POST)
+    public  String processJob(@Valid @ModelAttribute("job") Job job,
+                              BindingResult bindingResult, Model model) {
+             jobRepository.save(job);
+
+        return "redirect:/addskilltojob/" + job.getId();
     }
 
-   @PostMapping("/addSkillToJobInfo{jobid}")
-    public String addJobInfo(@PathVariable("jobid") long id,
-                             @RequestParam("job")String job_Id , @ModelAttribute("aSkill") Skills skill,Model model) {
+    @GetMapping("/addSkillToJobInfo/{id}")
+    public String addSkillToJob(@PathVariable("id") long jobID, Model model)
+    {
+        model.addAttribute("newJob", new Resume());
+        model.addAttribute("skillLists", skillsRepostory.findAll());
 
+        return "addSkillToJobInfo";
+    }
+    @PostMapping("/addSkillToJobInfo/{jobid}")
+    public String Skilltojob(@PathVariable ("jobid") long id,
+                             @RequestParam("job")String jobID ,
+                             @ModelAttribute("aSkill")Skills skill,
+                             BindingResult bindingResult, Principal principal ,Model model)
+    {
+        if (bindingResult.hasErrors()) {
+
+            return "addSkillToJobInfo";
+        }
+        Job jobs=jobRepository.findOne(new Long(id));
+        jobs.addSkill(skillsRepostory.findOne(new Long(jobID)));
+        jobs.setResume(resumeRepostory.findByUsername(principal.getName()));
+        jobRepository.save(jobs);
+        model.addAttribute("person", resumeRepostory.findByUsername(principal.getName()));
+        return "redirect:/addSkillToJobInfo/"+id;
+    }
+
+
+
+
+//    @GetMapping("/addSkillToJobInfo")
+//    public String addSkilltoJob(Model model) {
+//        model.addAttribute("newJob", new Resume());
+//        model.addAttribute("skillLists", skillsRepostory.findAll());
+//        return "addSkillToJobInfo";
+//    }
+//
+//   @PostMapping("/addSkillToJobInfo")
+//    public String addJobInfo(@ModelAttribute("aSkill") Skills skill,
+//                             @RequestParam("job")String job_Id ,
+//                             BindingResult bindingResult, Principal principal ,Model model) {
+//
 //        if (bindingResult.hasErrors()) {
 //
 //            return "addSkillToJobInfo";
 //        }
-        Job jobs= jobRepository.findOne(new Long(id));
-        jobs.addSkill(skillsRepostory.findOne(new Long(job_Id)));
-        jobRepository.save(jobs);
-//        model.addAttribute("skillLists", skillsRepostory.findAll());
-//        model.addAttribute("jobList", jobRepository.findAll());
-        return "redirect:/addSkillToJobInfo/"+id;
-
-    }
+//       Job jobs=new Job();
+//       jobs.addSkill(skillsRepostory.findOne(new Long(job_Id)));
+//       jobs.setResume(resumeRepostory.findByUsername(principal.getName()));
+//       jobRepository.save(jobs);
+//       model.addAttribute("person", resumeRepostory.findByUsername(principal.getName()));
+//       return "redirect:/listJobInfo";
+//   }
     /*This method is used to modify the existing in forms then update data bas tables according to there modify fields */
     @RequestMapping("/updateJobInfo/{id}")
     public String updateJobInfo(@PathVariable("id") long id, Model model){
-        model.addAttribute("newJob", skillsRepostory.findOne(id));
+        model.addAttribute("newJob", jobRepository.findOne(id));
         return "addJobInfo";
     }
     /*This method is used to delete the existing data  records from data base table and dispaly the rest of data which has been there*/
     @RequestMapping("/deleteJobInfo/{id}")
     public String delJobInfo(@PathVariable("id") long id){
-        skillsRepostory.delete(id);
+        jobRepository.delete(id);
         return "redirect:/listJobInfo";
     }
     /*This method is used to display the existing data  records from data base table*/
     @RequestMapping("/listJobInfo")
     public String listJobInfo(Model model){
-        model.addAttribute("searchJob", skillsRepostory.findAll());
+        model.addAttribute("searchJob", jobRepository.findAll());
         return "listJobInfo";
     }
     /*******************************Result Info***************************************************************/
@@ -363,15 +403,31 @@ public class MainController {
         return "SummerizedResume";
     }
 
-//    @GetMapping("/logout")
-//    public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if (auth != null){
-//            new SecurityContextLogoutHandler().logout(request, response, auth);
-//        }
-//        return "redirect:/login";
-//    }
 
+//    @GetMapping("/editinfo")
+//
+//    public String Editperson(Principal principal,Model model)
+//    {
+//        model.addAttribute("person",personRepository.findAllByUsername(principal.getName()));
+//        return "editinfo";
+//    }
+    @GetMapping("/searchPeoples")
+    public String searchPeople(Model model) {
+
+        model.addAttribute("listUser",new Resume());
+
+        return "searchPeoples";
+    }
+
+    @PostMapping("/searchPeoples")
+    public String dispPeople(@ModelAttribute("listUser") Resume resumes,
+                             Model model) {
+
+        Iterable<Resume>byFirstnameAndLastname=resumeRepostory.findByFirstnameAndLastname(resumes.getFirstname()+resumes.getLastname());
+        model.addAttribute("personInfo",byFirstnameAndLastname);
+
+        return "dispPeopleInfo";
+    }
 
 
 

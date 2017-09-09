@@ -18,8 +18,9 @@
                     <tr>
                         <th id="skill" role="gridcell">Title</th>
                         <th id="employer" role="gridcell">Employer</th>
-                        <th id="employer" role="gridcell">Description</th>
-                        <th id="employer" role="gridcell">Salary</th>
+                        <th id="descr" role="gridcell">Description</th>
+                        <th id="salary" role="gridcell">Salary</th>
+                        <th id="skills" role="gridcell">Skills</th>
                         <th id="user_action" role="gridcell">Actions</th>
                     </tr>
                     </thead>
@@ -30,13 +31,16 @@
                         <td th:text="${lists.employer}"></td>
                         <td th:text="${lists.description}"></td>
                         <td th:text="${lists.salary}"></td>
+                        <th:block th:each="ski:${list.skills}">
+                            <td th:text="ski.skill"></td>
+                        </th:block>
                         <td>
                             <a th:href="@{/updateJobInfo/{id}(id=${lists.id})}" class="btn btn-primary">Update</a>
                             <!--<a th:href="@{/deleteSkillInfo/{id}(id=${skilllist.id})}" class="btn btn-danger">Delete</a>-->
                         </td>
                     </tr>
                     </tbody>
-                    @{/addSkillToJobInfo/{JId}(JId=${newJob.id})}" th:object="${newSkill}" method="post">
+
                 </table>
             </div>
         </div>
