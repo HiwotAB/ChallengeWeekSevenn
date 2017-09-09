@@ -40,31 +40,31 @@
                             <div  th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="well alert alert-danger" role="alert"></div>
                             <input  th:field="*{description}" name="description" placeholder="Enter Description" class="form-control" type="text">
                         </div>
-                    </div>salary
+                    </div>
                     <div class="form-group">
                         <div class="col-sm-10">
                             <div  th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}" class="well alert alert-danger" role="alert"></div>
                             <input  th:field="*{salary}" name="salary" placeholder="Enter Salary" class="form-control" type="text">
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover table-condensed">
-                            <caption>
-                                <h3><b>Desired Skills</b></h3>
-                            </caption>
+                    <!--<div class="table-responsive">-->
+                        <!--<table class="table table-hover table-condensed">-->
+                            <!--<caption>-->
+                                <!--<h3><b>Desired Skills</b></h3>-->
+                            <!--</caption>-->
 
-                            <tbody>
-                            <th:block th:each="item:${skills}">
-                                <tr>
-                                    <!-- checked skill ids will be available as request params in controller post route -->
-                                    <td><input type="checkbox" name="checkedIds" th:value="${item.id}"/></td>
-                                    <td th:text="${item.skill}"></td>
-                                </tr>
-                            </th:block>
-                            </tbody>
+                            <!--<tbody>-->
+                            <!--<th:block th:each="item:${skills}">-->
+                                <!--<tr>-->
+                                    <!--&lt;!&ndash; checked skill ids will be available as request params in controller post route &ndash;&gt;-->
+                                    <!--<td><input type="checkbox" name="checkedIds" th:value="${item.id}"/></td>-->
+                                    <!--<td th:text="${item.skill}"></td>-->
+                                <!--</tr>-->
+                            <!--</th:block>-->
+                            <!--</tbody>-->
 
-                        </table>
-                    </div>
+                        <!--</table>-->
+                    <!--</div>-->
                     <!-- Button -->
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">

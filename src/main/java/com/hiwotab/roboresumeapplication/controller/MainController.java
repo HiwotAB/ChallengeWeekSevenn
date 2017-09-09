@@ -411,7 +411,7 @@ public class MainController {
 //        model.addAttribute("person",personRepository.findAllByUsername(principal.getName()));
 //        return "editinfo";
 //    }
-    @GetMapping("/searchPeoples")
+    @GetMapping("/searchUsers")
     public String searchPeople(Model model) {
 
         model.addAttribute("listUser",new Resume());
@@ -419,7 +419,7 @@ public class MainController {
         return "searchPeoples";
     }
 
-    @PostMapping("/searchPeoples")
+    @PostMapping("/searchUsers")
     public String dispPeople(@ModelAttribute("listUser") Resume resumes,
                              Model model) {
 
@@ -429,6 +429,22 @@ public class MainController {
         return "dispPeopleInfo";
     }
 
+    @GetMapping("/searchJobs")
+    public String searchJobs(Model model) {
+
+        model.addAttribute("listJob",new Job());
+
+        return "searchJobs";
+    }
+
+    @PostMapping("/searchJobs")
+    public String dispJobList(@ModelAttribute("listJob") Job job,
+                             Model model) {
+
+
+
+        return "dispsearchJob";
+    }
 
 
 }
